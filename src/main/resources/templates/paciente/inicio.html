@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Inicio')}">
+    <meta charset="UTF-8">
+    <title>Inicio · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../../static/css/app.css">
+</head>
+<body>
+<!-- P03 - Inicio del paciente -->
+<header th:replace="~{fragments/layout :: barra('inicio')}" class="barra">
+    <div class="barra-in">
+        <a class="marca" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+        <nav class="menu"><a href="inicio.html" class="activo">Inicio</a><a href="reservar.html">Reservar cita</a><a href="mis-citas.html">Mis citas</a></nav>
+        <div class="usuario"><span>María Torres Salas</span><span class="avatar"></span><button class="btn-salir">Salir</button></div>
+    </div>
+</header>
+<main class="contenido">
+    <h1>Hola, <span sec:authentication="principal.nombreVisible">María Torres Salas</span></h1>
+    <p class="sub">¿Qué necesitas hoy?</p>
+
+    <div class="grid-2">
+        <section class="tarjeta">
+            <h2>Tu próxima cita</h2>
+            <div class="proxima" th:if="${proxima}">
+                <div class="fecha-caja">
+                    <div class="dia" th:text="${#temporals.format(proxima.fecha, 'dd')}">05</div>
+                    <div class="mes" th:text="${#temporals.format(proxima.fecha, 'MMM')}">nov</div>
+                </div>
+                <div>
+                    <strong th:text="${proxima.nombreEspecialidad}">Cardiología</strong><br>
+                    <span th:text="${proxima.nombreMedico}">Dr(a). Luis Ramos Paredes</span><br>
+                    <span class="ayuda" th:text="|${#temporals.format(proxima.horaInicio, 'HH:mm')} · Consultorio ${proxima.codigoConsultorio} · Código ${proxima.codigo}|">09:00 · Consultorio C-101 · Código CSE-100003</span>
+                </div>
+            </div>
+            <p class="sub" th:unless="${proxima}">No tienes citas programadas.</p>
+            <a class="btn btn-secundario btn-chico" th:href="@{/paciente/mis-citas}" href="mis-citas.html">Ver todas mis citas (<span th:text="${totalCitas}">4</span>)</a>
+        </section>
+        <section class="tarjeta">
+            <h2>Reserva en 4 pasos</h2>
+            <p class="ayuda">Elige especialidad, médico, día y hora. Solo verás los horarios libres y recibirás
+                un código de cita como constancia.</p>
+            <a class="btn btn-primario" th:href="@{/paciente/reservar}" href="reservar.html">Reservar una cita</a>
+            <p class="nota">Puedes cancelar tu cita en línea hasta 24 horas antes.</p>
+        </section>
+    </div>
+</main>
+</body>
+</html>

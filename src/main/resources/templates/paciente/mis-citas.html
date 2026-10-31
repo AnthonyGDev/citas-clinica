@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mis citas')}">
+    <meta charset="UTF-8">
+    <title>Mis citas · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../../static/css/app.css">
+</head>
+<body>
+<!-- P06 - Mis citas con cancelacion (RF05, RN02) -->
+<header th:replace="~{fragments/layout :: barra('mis-citas')}" class="barra">
+    <div class="barra-in">
+        <a class="marca" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+        <nav class="menu"><a href="inicio.html">Inicio</a><a href="reservar.html">Reservar cita</a><a href="mis-citas.html" class="activo">Mis citas</a></nav>
+        <div class="usuario"><span>María Torres Salas</span><span class="avatar"></span><button class="btn-salir">Salir</button></div>
+    </div>
+</header>
+<main class="contenido">
+    <h1>Mis citas</h1>
+    <p class="sub">Puedes cancelar en línea hasta 24 horas antes de la atención.</p>
+    <div class="alerta alerta-exito" th:if="${exito}" th:text="${exito}">Tu cita fue cancelada.</div>
+    <div class="alerta alerta-error" th:if="${error}" th:text="${error}"></div>
+
+    <div class="tarjeta">
+        <table>
+            <thead><tr><th>Código</th><th>Fecha y hora</th><th>Especialidad</th><th>Médico</th><th>Estado</th><th>Acción</th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${citas}">
+                <td th:text="${c.codigo}">CSE-100003</td>
+                <td th:text="|${#temporals.format(c.fecha, 'EEE dd/MM/yyyy')} ${#temporals.format(c.horaInicio, 'HH:mm')}|">jue 05/11/2026 09:00</td>
+                <td th:text="${c.nombreEspecialidad}">Cardiología</td>
+                <td th:text="${c.nombreMedico}">Dr(a). Luis Ramos Paredes</td>
+                <td><span class="estado" th:classappend="|estado-${c.estado}|" th:text="${c.estado.etiqueta}">Confirmada</span></td>
+                <td>
+                    <form th:if="${c.puedeModificarse(ahora)}" th:action="@{/paciente/citas/{id}/cancelar(id=${c.id})}" method="post"
+                          data-confirmar="¿Seguro que deseas cancelar esta cita? El horario quedará libre.">
+                        <button type="submit" class="btn btn-peligro btn-chico">Cancelar</button>
+                    </form>
+                    <span class="candado" th:if="${c.estado.esVigente() and !c.puedeModificarse(ahora)}">Menos de 24 h: llama a recepción</span>
+                </td>
+            </tr>
+            <tr th:remove="all"><td>CSE-100004</td><td>dom 01/11/2026 08:00</td><td>Medicina General</td><td>Dr(a). Carlos Mendoza Ríos</td><td><span class="estado estado-CONFIRMADA">Confirmada</span></td><td><span class="candado">Menos de 24 h: llama a recepción</span></td></tr>
+            <tr th:remove="all"><td>CSE-100002</td><td>lun 19/10/2026 10:00</td><td>Odontología</td><td>Dr(a). Jorge Salazar Núñez</td><td><span class="estado estado-CANCELADA">Cancelada</span></td><td></td></tr>
+            <tr th:remove="all"><td>CSE-100001</td><td>jue 01/10/2026 09:00</td><td>Medicina General</td><td>Dr(a). Carlos Mendoza Ríos</td><td><span class="estado estado-ATENDIDA">Atendida</span></td><td></td></tr>
+            <tr th:if="${citas.isEmpty()}"><td colspan="6">Aún no tienes citas.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
