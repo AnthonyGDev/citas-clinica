@@ -28,10 +28,10 @@
     </form>
     <p></p>
     <div class="grid-4">
-        <div class="kpi"><div class="valor" th:text="${total}">742</div><div class="etiqueta">Citas en el periodo</div></div>
-        <div class="kpi"><div class="valor" th:text="${atendidas}">414</div><div class="etiqueta">Atendidas</div></div>
-        <div class="kpi"><div class="valor" th:text="${canceladas}">64</div><div class="etiqueta">Canceladas</div></div>
-        <div class="kpi alerta-kpi"><div class="valor" th:text="|${ausentismo} %|">13.6 %</div><div class="etiqueta">Ausentismo (meta ≤ 10 %)</div></div>
+        <div class="kpi"><div class="valor" th:text="${total}">713</div><div class="etiqueta">Citas en el periodo</div></div>
+        <div class="kpi"><div class="valor" th:text="${atendidas}">428</div><div class="etiqueta">Atendidas</div></div>
+        <div class="kpi"><div class="valor" th:text="${canceladas}">61</div><div class="etiqueta">Canceladas</div></div>
+        <div class="kpi alerta-kpi"><div class="valor" th:text="|${ausentismo} %|">13.0 %</div><div class="etiqueta">Ausentismo (meta ≤ 10 %)</div></div>
     </div>
     <p></p>
     <div class="grid-2">
@@ -43,13 +43,18 @@
                 <svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"
                      th:with="a=${f.atendidas * 100.0 / maximo}, n=${f.noAsistio * 100.0 / maximo},
                               c=${f.canceladas * 100.0 / maximo}, v=${f.vigentes * 100.0 / maximo}">
-                    <rect class="barra-at" x="0" height="10" width="54" th:attr="width=${a}"/>
-                    <rect class="barra-na" x="54" height="10" width="9" th:attr="x=${a},width=${n}"/>
-                    <rect class="barra-ca" x="63" height="10" width="8" th:attr="x=${a + n},width=${c}"/>
-                    <rect class="barra-vi" x="71" height="10" width="27" th:attr="x=${a + n + c},width=${v}"/>
+                    <rect class="barra-at" x="0" height="10" width="22.6" th:attr="width=${a}"/>
+                    <rect class="barra-na" x="22.6" height="10" width="3.9" th:attr="x=${a},width=${n}"/>
+                    <rect class="barra-ca" x="26.5" height="10" width="3.5" th:attr="x=${a + n},width=${c}"/>
+                    <rect class="barra-vi" x="30.0" height="10" width="11.7" th:attr="x=${a + n + c},width=${v}"/>
                 </svg>
                 <strong class="num" th:text="${f.total}">96</strong>
             </div>
+            <div class="barra-fila" th:remove="all"><span>Ginecología</span><svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"><rect class="barra-at" x="0" height="10" width="16.5"/><rect class="barra-na" x="16.5" height="10" width="2.2"/><rect class="barra-ca" x="18.7" height="10" width="2.6"/><rect class="barra-vi" x="21.3" height="10" width="6.1"/></svg><strong class="num">63</strong></div>
+            <div class="barra-fila" th:remove="all"><span>Medicina General</span><svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"><rect class="barra-at" x="0" height="10" width="61.3"/><rect class="barra-na" x="61.3" height="10" width="9.6"/><rect class="barra-ca" x="70.9" height="10" width="8.3"/><rect class="barra-vi" x="79.1" height="10" width="20.9"/></svg><strong class="num">230</strong></div>
+            <div class="barra-fila" th:remove="all"><span>Odontología</span><svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"><rect class="barra-at" x="0" height="10" width="38.3"/><rect class="barra-na" x="38.3" height="10" width="4.8"/><rect class="barra-ca" x="43.0" height="10" width="5.2"/><rect class="barra-vi" x="48.3" height="10" width="13.5"/></svg><strong class="num">142</strong></div>
+            <div class="barra-fila" th:remove="all"><span>Pediatría</span><svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"><rect class="barra-at" x="0" height="10" width="27.8"/><rect class="barra-na" x="27.8" height="10" width="3.5"/><rect class="barra-ca" x="31.3" height="10" width="3.9"/><rect class="barra-vi" x="35.2" height="10" width="9.6"/></svg><strong class="num">103</strong></div>
+            <div class="barra-fila" th:remove="all"><span>Traumatología</span><svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"><rect class="barra-at" x="0" height="10" width="19.6"/><rect class="barra-na" x="19.6" height="10" width="3.9"/><rect class="barra-ca" x="23.5" height="10" width="3.0"/><rect class="barra-vi" x="26.5" height="10" width="7.8"/></svg><strong class="num">79</strong></div>
             <div class="leyenda"><span><i class="barra-at"></i>Atendidas</span><span><i class="barra-na"></i>No asistió</span>
                 <span><i class="barra-ca"></i>Canceladas</span><span><i class="barra-vi"></i>Vigentes</span></div>
         </section>
@@ -66,6 +71,11 @@
                     <td class="num" th:text="${f.vigentes}">27</td>
                     <td class="num" th:text="${f.porcentajeAusentismo}">14.8</td>
                 </tr>
+                <tr th:remove="all"><td>Ginecología</td><td class="num">38</td><td class="num">5</td><td class="num">6</td><td class="num">14</td><td class="num">11.6</td></tr>
+                <tr th:remove="all"><td>Medicina General</td><td class="num">141</td><td class="num">22</td><td class="num">19</td><td class="num">48</td><td class="num">13.5</td></tr>
+                <tr th:remove="all"><td>Odontología</td><td class="num">88</td><td class="num">11</td><td class="num">12</td><td class="num">31</td><td class="num">11.1</td></tr>
+                <tr th:remove="all"><td>Pediatría</td><td class="num">64</td><td class="num">8</td><td class="num">9</td><td class="num">22</td><td class="num">11.1</td></tr>
+                <tr th:remove="all"><td>Traumatología</td><td class="num">45</td><td class="num">9</td><td class="num">7</td><td class="num">18</td><td class="num">16.7</td></tr>
                 </tbody>
             </table>
         </section>
