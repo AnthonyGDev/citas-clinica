@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reportes')}">
+    <meta charset="UTF-8">
+    <title>Reportes · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../../static/css/app.css">
+</head>
+<body>
+<!-- P11 - Panel de reportes (RF10): R01 citas por especialidad -->
+<header th:replace="~{fragments/layout :: barra('reportes')}" class="barra">
+    <div class="barra-in">
+        <a class="marca" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+        <nav class="menu"><a href="reportes.html" class="activo">Reportes</a></nav>
+        <div class="usuario"><span>Administración</span><span class="avatar"></span><button class="btn-salir">Salir</button></div>
+    </div>
+</header>
+<main class="contenido">
+    <h1>Reportes de gestión</h1>
+    <p class="sub">R01 · Citas por especialidad y estado</p>
+
+    <form class="tarjeta filtros" th:action="@{/admin/reportes}" method="get">
+        <div><label for="desde">Desde</label><input type="date" id="desde" name="desde" th:value="${desde}" value="2026-09-01"></div>
+        <div><label for="hasta">Hasta</label><input type="date" id="hasta" name="hasta" th:value="${hasta}" value="2026-11-30"></div>
+        <button class="btn btn-primario" type="submit">Filtrar</button>
+        <a class="btn btn-secundario" th:each="f : ${formatos}"
+           th:href="@{/admin/reportes/r01(formato=${f},desde=${desde},hasta=${hasta})}"
+           th:text="|Exportar ${#strings.toUpperCase(f)}|">Exportar XLSX</a>
+    </form>
+    <p></p>
+    <div class="grid-4">
+        <div class="kpi"><div class="valor" th:text="${total}">742</div><div class="etiqueta">Citas en el periodo</div></div>
+        <div class="kpi"><div class="valor" th:text="${atendidas}">414</div><div class="etiqueta">Atendidas</div></div>
+        <div class="kpi"><div class="valor" th:text="${canceladas}">64</div><div class="etiqueta">Canceladas</div></div>
+        <div class="kpi alerta-kpi"><div class="valor" th:text="|${ausentismo} %|">13.6 %</div><div class="etiqueta">Ausentismo (meta ≤ 10 %)</div></div>
+    </div>
+    <p></p>
+    <div class="grid-2">
+        <section class="tarjeta">
+            <h2>Distribución por especialidad</h2>
+            <div class="barra-fila" th:each="f : ${filas}">
+                <span th:text="${f.especialidad}">Cardiología</span>
+                <!-- SVG en lugar de style="width:..." para respetar la politica CSP (sin estilos en linea) -->
+                <svg class="barra-fondo" viewBox="0 0 100 10" preserveAspectRatio="none"
+                     th:with="a=${f.atendidas * 100.0 / maximo}, n=${f.noAsistio * 100.0 / maximo},
+                              c=${f.canceladas * 100.0 / maximo}, v=${f.vigentes * 100.0 / maximo}">
+                    <rect class="barra-at" x="0" height="10" width="54" th:attr="width=${a}"/>
+                    <rect class="barra-na" x="54" height="10" width="9" th:attr="x=${a},width=${n}"/>
+                    <rect class="barra-ca" x="63" height="10" width="8" th:attr="x=${a + n},width=${c}"/>
+                    <rect class="barra-vi" x="71" height="10" width="27" th:attr="x=${a + n + c},width=${v}"/>
+                </svg>
+                <strong class="num" th:text="${f.total}">96</strong>
+            </div>
+            <div class="leyenda"><span><i class="barra-at"></i>Atendidas</span><span><i class="barra-na"></i>No asistió</span>
+                <span><i class="barra-ca"></i>Canceladas</span><span><i class="barra-vi"></i>Vigentes</span></div>
+        </section>
+        <section class="tarjeta">
+            <h2>Detalle</h2>
+            <table>
+                <thead><tr><th>Especialidad</th><th class="num">Atend.</th><th class="num">No asist.</th><th class="num">Cancel.</th><th class="num">Vig.</th><th class="num">% Aus.</th></tr></thead>
+                <tbody>
+                <tr th:each="f : ${filas}">
+                    <td th:text="${f.especialidad}">Cardiología</td>
+                    <td class="num" th:text="${f.atendidas}">52</td>
+                    <td class="num" th:text="${f.noAsistio}">9</td>
+                    <td class="num" th:text="${f.canceladas}">8</td>
+                    <td class="num" th:text="${f.vigentes}">27</td>
+                    <td class="num" th:text="${f.porcentajeAusentismo}">14.8</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</main>
+</body>
+</html>
