@@ -19,7 +19,7 @@
     <p class="sub">Completa los pasos. Solo verás los horarios libres.</p>
 
     <div class="pasos">
-        <div class="paso" th:classappend="${paso > 1} ? 'hecho' : 'actual'">✓ 1. Especialidad</div>
+        <div class="paso hecho" th:classappend="${paso > 1} ? 'hecho' : 'actual'">✓ 1. Especialidad</div>
         <div class="paso hecho" th:classappend="${paso > 2} ? 'hecho' : (${paso == 2} ? 'actual' : '')">✓ 2. Médico</div>
         <div class="paso actual" th:classappend="${paso > 3} ? 'hecho' : (${paso == 3} ? 'actual' : '')">3. Fecha</div>
         <div class="paso" th:classappend="${paso == 4} ? 'actual'">4. Hora y confirmar</div>

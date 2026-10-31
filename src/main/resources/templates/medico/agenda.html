@@ -20,9 +20,9 @@
     <div class="alerta alerta-error" th:if="${error}" th:text="${error}"></div>
 
     <div class="grid-4">
-        <div class="kpi"><div class="valor" th:text="${citas.size()}">9</div><div class="etiqueta">Citas del día</div></div>
-        <div class="kpi"><div class="valor" th:text="${atendidas}">3</div><div class="etiqueta">Atendidas</div></div>
-        <div class="kpi"><div class="valor" th:text="${pendientes}">5</div><div class="etiqueta">Por atender</div></div>
+        <div class="kpi"><div class="valor" th:text="${citas.size()}">5</div><div class="etiqueta">Citas del día</div></div>
+        <div class="kpi"><div class="valor" th:text="${atendidas}">1</div><div class="etiqueta">Atendidas</div></div>
+        <div class="kpi"><div class="valor" th:text="${pendientes}">3</div><div class="etiqueta">Por atender</div></div>
         <form class="kpi" th:action="@{/medico/agenda}" method="get">
             <label for="fecha">Ver otro día</label>
             <input type="date" id="fecha" name="fecha" th:value="${fecha}" value="2026-11-02" data-autosubmit>
@@ -38,7 +38,7 @@
                 <td th:text="${c.nombrePaciente}">Pedro Gutiérrez Silva</td>
                 <td th:text="${c.motivo} ?: '—'">—</td>
                 <td th:text="${c.canal}">PRESENCIAL</td>
-                <td><span class="estado" th:classappend="|estado-${c.estado}|" th:text="${c.estado.etiqueta}">Atendida</span></td>
+                <td><span class="estado" th:classappend="|estado-${c.estado}|" th:text="${c.estado.etiqueta}">Confirmada</span></td>
                 <td class="acciones" th:if="${c.estado.esVigente() and !c.fecha.isAfter(hoy)}">
                     <form th:action="@{/medico/citas/{id}/atendida(id=${c.id})}" method="post">
                         <input type="hidden" name="fecha" th:value="${fecha}">
