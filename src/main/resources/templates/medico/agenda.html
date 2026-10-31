@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Agenda del día')}">
+    <meta charset="UTF-8">
+    <title>Agenda del día · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../../static/css/app.css">
+</head>
+<body>
+<!-- P08 - Agenda del dia del medico (RF08) -->
+<header th:replace="~{fragments/layout :: barra('agenda')}" class="barra">
+    <div class="barra-in">
+        <a class="marca" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+        <nav class="menu"><a href="agenda.html" class="activo">Agenda del día</a></nav>
+        <div class="usuario"><span>Dr(a). Luis Ramos Paredes</span><span class="avatar"></span><button class="btn-salir">Salir</button></div>
+    </div>
+</header>
+<main class="contenido">
+    <h1>Agenda del día</h1>
+    <p class="sub" th:text="${#strings.capitalize(#temporals.format(fecha, 'EEEE dd ''de'' MMMM yyyy'))}">Lunes 02 de noviembre 2026</p>
+    <div class="alerta alerta-error" th:if="${error}" th:text="${error}"></div>
+
+    <div class="grid-4">
+        <div class="kpi"><div class="valor" th:text="${citas.size()}">9</div><div class="etiqueta">Citas del día</div></div>
+        <div class="kpi"><div class="valor" th:text="${atendidas}">3</div><div class="etiqueta">Atendidas</div></div>
+        <div class="kpi"><div class="valor" th:text="${pendientes}">5</div><div class="etiqueta">Por atender</div></div>
+        <form class="kpi" th:action="@{/medico/agenda}" method="get">
+            <label for="fecha">Ver otro día</label>
+            <input type="date" id="fecha" name="fecha" th:value="${fecha}" value="2026-11-02" data-autosubmit>
+        </form>
+    </div>
+    <p></p>
+    <div class="tarjeta">
+        <table>
+            <thead><tr><th>Hora</th><th>Paciente</th><th>Motivo</th><th>Canal</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${citas}">
+                <td><strong th:text="${#temporals.format(c.horaInicio, 'HH:mm')}">08:00</strong></td>
+                <td th:text="${c.nombrePaciente}">Pedro Gutiérrez Silva</td>
+                <td th:text="${c.motivo} ?: '—'">—</td>
+                <td th:text="${c.canal}">PRESENCIAL</td>
+                <td><span class="estado" th:classappend="|estado-${c.estado}|" th:text="${c.estado.etiqueta}">Atendida</span></td>
+                <td class="acciones" th:if="${c.estado.esVigente() and !c.fecha.isAfter(hoy)}">
+                    <form th:action="@{/medico/citas/{id}/atendida(id=${c.id})}" method="post">
+                        <input type="hidden" name="fecha" th:value="${fecha}">
+                        <button class="btn btn-primario btn-chico">Atendida</button>
+                    </form>
+                    <form th:action="@{/medico/citas/{id}/no-asistio(id=${c.id})}" method="post">
+                        <input type="hidden" name="fecha" th:value="${fecha}">
+                        <button class="btn btn-secundario btn-chico">No asistió</button>
+                    </form>
+                </td>
+                <td th:unless="${c.estado.esVigente() and !c.fecha.isAfter(hoy)}"></td>
+            </tr>
+            <tr th:remove="all"><td><strong>08:20</strong></td><td>Sofía Rojas Mendoza</td><td>—</td><td>TELEFONO</td><td><span class="estado estado-NO_ASISTIO">No asistió</span></td><td></td></tr>
+            <tr th:remove="all"><td><strong>08:40</strong></td><td>Camila Cruz Medina</td><td>—</td><td>PRESENCIAL</td><td><span class="estado estado-ATENDIDA">Atendida</span></td><td></td></tr>
+            <tr th:remove="all"><td><strong>09:20</strong></td><td>Raúl Herrera Pinto</td><td>—</td><td>PRESENCIAL</td><td><span class="estado estado-CONFIRMADA">Confirmada</span></td><td class="acciones"><button class="btn btn-primario btn-chico">Atendida</button><button class="btn btn-secundario btn-chico">No asistió</button></td></tr>
+            <tr th:remove="all"><td><strong>10:00</strong></td><td>Elena Campos Aguilar</td><td>—</td><td>TELEFONO</td><td><span class="estado estado-CONFIRMADA">Confirmada</span></td><td class="acciones"><button class="btn btn-primario btn-chico">Atendida</button><button class="btn btn-secundario btn-chico">No asistió</button></td></tr>
+            <tr th:if="${citas.isEmpty()}"><td colspan="6">No hay citas para este día.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
