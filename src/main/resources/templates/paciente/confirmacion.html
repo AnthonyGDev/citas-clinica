@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cita confirmada')}">
+    <meta charset="UTF-8">
+    <title>Cita confirmada · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../../static/css/app.css">
+</head>
+<body>
+<!-- P05 - Confirmacion de cita (RF04, RF06) -->
+<header th:replace="~{fragments/layout :: barra('reservar')}" class="barra">
+    <div class="barra-in">
+        <a class="marca" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+        <nav class="menu"><a href="inicio.html">Inicio</a><a href="reservar.html" class="activo">Reservar cita</a><a href="mis-citas.html">Mis citas</a></nav>
+        <div class="usuario"><span>María Torres Salas</span><span class="avatar"></span><button class="btn-salir">Salir</button></div>
+    </div>
+</header>
+<main class="contenido">
+    <div class="tarjeta confirmacion">
+        <div class="check-grande">✓</div>
+        <h1>¡Tu cita está confirmada!</h1>
+        <p class="sub">Guarda este código. Te lo pedirán en admisión.</p>
+        <div class="codigo" th:text="${cita.codigo}">CSE-482913</div>
+        <dl class="detalle">
+            <dt>Especialidad</dt><dd th:text="${cita.nombreEspecialidad}">Traumatología</dd>
+            <dt>Médico</dt><dd th:text="${cita.nombreMedico}">Dr(a). Miguel Paredes León</dd>
+            <dt>Fecha</dt><dd th:text="${#temporals.format(cita.fecha, 'EEEE dd ''de'' MMMM yyyy')}">lunes 09 de noviembre 2026</dd>
+            <dt>Hora</dt><dd th:text="|${#temporals.format(cita.horaInicio, 'HH:mm')} – ${#temporals.format(cita.horaFin, 'HH:mm')}|">15:40 – 16:00</dd>
+            <dt>Consultorio</dt><dd th:text="${cita.codigoConsultorio}">C-203</dd>
+            <dt>Estado</dt><dd><span class="estado" th:classappend="|estado-${cita.estado}|" th:text="${cita.estado.etiqueta}">Confirmada</span></dd>
+        </dl>
+        <p class="alerta alerta-info">Registramos el aviso de confirmación para tu correo. Puedes cancelar en línea hasta 24 horas antes.</p>
+        <a class="btn btn-primario" th:href="@{/paciente/mis-citas}" href="mis-citas.html">Ir a mis citas</a>
+        <a class="btn btn-secundario" th:href="@{/paciente/inicio}" href="inicio.html">Volver al inicio</a>
+    </div>
+</main>
+</body>
+</html>
