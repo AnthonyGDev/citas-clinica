@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Aviso')}">
+    <meta charset="UTF-8">
+    <title>Aviso · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../static/css/app.css">
+</head>
+<body>
+<header class="barra">
+    <div class="barra-in"><a class="marca" th:href="@{/}" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a></div>
+</header>
+<main class="contenido">
+    <div class="tarjeta confirmacion">
+        <h1 th:text="${titulo} ?: 'Ocurrió un problema'">Ocurrió un problema</h1>
+        <p class="sub" th:text="${mensaje} ?: 'No pudimos completar tu solicitud. Inténtalo nuevamente.'">
+            No pudimos completar tu solicitud.</p>
+        <a class="btn btn-primario" th:href="@{/}" href="#">Volver al inicio</a>
+    </div>
+</main>
+</body>
+</html>
