@@ -1,0 +1,166 @@
+/* Guia de estilo - Clinica Santa Elena (Avance 2, figura 15) */
+:root {
+  --primario-oscuro: #0A3D45;
+  --primario: #0E7C86;
+  --acento: #35C4A0;
+  --tarjeta: #E4EFEF;
+  --fondo: #F4F8F8;
+  --error: #B4544A;
+  --texto: #16292E;
+  --texto-suave: #4E6B70;
+  --borde: #CFDCDD;
+  --radio: 10px;
+}
+* { box-sizing: border-box; }
+html { font-size: 15px; }
+body { margin: 0; font-family: Arial, "Helvetica Neue", sans-serif; color: var(--texto); background: var(--fondo); line-height: 1.45; }
+a { color: var(--primario); }
+h1 { font-size: 1.9rem; color: var(--primario-oscuro); margin: 0 0 .25rem; }
+h2 { font-size: 1.15rem; color: var(--primario-oscuro); margin: 0 0 .75rem; }
+.sub { color: var(--texto-suave); margin: 0 0 1.5rem; }
+
+/* Barra superior */
+.barra { background: var(--primario-oscuro); color: #fff; }
+.barra-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 2rem; padding: .9rem 1.5rem; }
+.marca { display: flex; align-items: center; gap: .6rem; font-weight: 700; font-size: 1.25rem; color: #fff; text-decoration: none; }
+.marca-icono { width: 30px; height: 30px; border-radius: 7px; background: var(--acento); color: var(--primario-oscuro); display: grid; place-items: center; font-weight: 900; font-size: 1.3rem; }
+.menu { display: flex; gap: 1.5rem; flex: 1; }
+.menu a { color: #CFE3E5; text-decoration: none; padding: .3rem 0; border-bottom: 3px solid transparent; }
+.menu a.activo, .menu a:hover { color: #fff; border-bottom-color: var(--acento); }
+.usuario { display: flex; align-items: center; gap: .8rem; font-size: .95rem; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: #E4EFEF; border: 3px solid var(--acento); }
+.btn-salir { background: transparent; border: 1px solid #5E8C92; color: #fff; border-radius: 6px; padding: .3rem .7rem; cursor: pointer; font-size: .85rem; }
+
+/* Contenido */
+.contenido { max-width: 1180px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+.tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 1.4rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 1.2rem; align-items: start; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+/* Formularios */
+label { display: block; font-weight: 700; font-size: .9rem; margin: .9rem 0 .35rem; }
+label:first-child { margin-top: 0; }
+input[type=text], input[type=email], input[type=password], input[type=date], input[type=tel], select, textarea {
+  width: 100%; padding: .65rem .75rem; border: 1px solid var(--borde); border-radius: 7px; font: inherit; color: var(--texto); background: #fff;
+}
+input:focus, select:focus, textarea:focus { outline: 3px solid rgba(53,196,160,.35); border-color: var(--primario); }
+textarea { min-height: 70px; resize: vertical; }
+.campo-error { color: var(--error); font-size: .85rem; margin-top: .25rem; }
+.check { display: flex; gap: .55rem; align-items: flex-start; font-weight: 400; font-size: .88rem; }
+.check input { margin-top: .2rem; }
+
+.btn { display: inline-block; border: 0; border-radius: 7px; padding: .7rem 1.3rem; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; }
+.btn-primario { background: var(--primario); color: #fff; }
+.btn-primario:hover { background: var(--primario-oscuro); }
+.btn-secundario { background: #fff; color: var(--primario); border: 2px solid var(--primario); }
+.btn-peligro { background: #fff; color: var(--error); border: 2px solid var(--error); }
+.btn-chico { padding: .35rem .75rem; font-size: .85rem; }
+.btn-bloque { width: 100%; }
+.btn[disabled] { background: #C9D3D4; color: #fff; border-color: #C9D3D4; cursor: not-allowed; }
+
+/* Mensajes */
+.alerta { border-radius: 8px; padding: .8rem 1rem; margin-bottom: 1.2rem; font-size: .95rem; }
+.alerta-error { background: #F9E5E2; color: #8A3128; border-left: 4px solid var(--error); }
+.alerta-exito { background: #DDF5EE; color: #155E4C; border-left: 4px solid var(--acento); }
+.alerta-info { background: var(--tarjeta); color: var(--primario-oscuro); border-left: 4px solid var(--primario); }
+
+/* Pasos de la reserva */
+.pasos { display: grid; grid-template-columns: repeat(4, 1fr); margin-bottom: 1.4rem; border: 1px solid var(--borde); border-radius: 6px; overflow: hidden; }
+.paso { padding: .8rem 1rem; background: #fff; color: var(--texto-suave); font-weight: 700; font-size: .95rem; border-right: 1px solid var(--borde); }
+.paso:last-child { border-right: 0; }
+.paso.hecho { background: var(--tarjeta); color: var(--primario-oscuro); }
+.paso.actual { background: var(--primario); color: #fff; }
+
+/* Lista de medicos */
+.opcion-medico { display: block; border: 1px solid var(--borde); border-radius: 8px; padding: .75rem .9rem; margin-bottom: .6rem; cursor: pointer; font-weight: 400; }
+.opcion-medico input { display: none; }
+.opcion-medico strong { display: block; font-size: 1rem; }
+.opcion-medico span { color: var(--texto-suave); font-style: italic; font-size: .88rem; }
+.opcion-medico.elegido { border: 2px solid var(--primario); background: #F2FAF9; }
+
+/* Calendario */
+.cal-titulo { text-align: center; font-weight: 700; font-size: 1.15rem; color: var(--primario-oscuro); margin-bottom: .8rem; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: .35rem; text-align: center; }
+.cal .dow { font-weight: 700; color: var(--texto-suave); font-size: .85rem; padding: .3rem 0; }
+.cal a, .cal span.dia { display: block; padding: .5rem 0; border-radius: 6px; text-decoration: none; font-size: .95rem; }
+.cal a { background: var(--tarjeta); color: var(--primario-oscuro); font-weight: 700; }
+.cal a.elegido { background: var(--primario); color: #fff; }
+.cal span.dia { color: #A9B9BB; }
+.nota { color: var(--texto-suave); font-style: italic; font-size: .85rem; margin-top: .7rem; }
+
+/* Bloques horarios */
+.bloques { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin-bottom: .4rem; }
+.bloque input { display: none; }
+.bloque span { display: block; text-align: center; padding: .55rem 0; border: 2px solid var(--primario); border-radius: 7px; color: var(--primario-oscuro); font-weight: 700; cursor: pointer; }
+.bloque input:checked + span { background: var(--primario); color: #fff; }
+.bloque.ocupado span { border-color: #E1E6E7; background: #EEF1F2; color: #AAB5B7; text-decoration: line-through; cursor: not-allowed; }
+
+/* Tablas */
+table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+th { text-align: left; background: var(--primario-oscuro); color: #fff; padding: .65rem .8rem; font-weight: 700; }
+td { padding: .65rem .8rem; border-bottom: 1px solid #E3EAEA; vertical-align: middle; }
+tr:hover td { background: #F7FBFB; }
+.num { text-align: right; }
+tfoot td { font-weight: 700; border-top: 2px solid var(--primario-oscuro); }
+
+/* Estados (siempre con texto, no solo color) */
+.estado { display: inline-block; padding: .2rem .65rem; border-radius: 20px; font-size: .78rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
+.estado-CONFIRMADA { background: #DDF5EE; color: #12735C; }
+.estado-PENDIENTE { background: #FBF0CC; color: #8A6A00; }
+.estado-ATENDIDA { background: #DCE8F7; color: #2A5A9A; }
+.estado-CANCELADA { background: #F9E1DE; color: #A23E33; }
+.estado-NO_ASISTIO { background: #E7EBEC; color: #4E5A5C; }
+.estado-REPROGRAMADA { background: #EDE3F7; color: #5E3E8A; }
+
+/* Indicadores */
+.kpi { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 1.1rem 1.2rem; }
+.kpi .valor { font-size: 2rem; font-weight: 700; color: var(--primario-oscuro); }
+.kpi .etiqueta { color: var(--texto-suave); font-size: .9rem; }
+.kpi.alerta-kpi .valor { color: var(--error); }
+
+/* Barras del reporte */
+.barra-fila { display: grid; grid-template-columns: 150px 1fr 50px; gap: .8rem; align-items: center; margin-bottom: .55rem; font-size: .92rem; }
+.barra-fondo { background: #EEF3F3; border-radius: 4px; height: 22px; width: 100%; display: block; }
+.barra-at { background: var(--primario); fill: var(--primario); }
+.barra-na { background: var(--error); fill: var(--error); }
+.barra-ca { background: #C9D3D4; fill: #C9D3D4; }
+.barra-vi { background: var(--acento); fill: var(--acento); }
+.leyenda { display: flex; gap: 1.2rem; font-size: .85rem; color: var(--texto-suave); margin-top: .8rem; flex-wrap: wrap; }
+.leyenda i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+
+/* Login */
+.pantalla-login { min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; }
+.login-lado { background: var(--primario-oscuro); color: #fff; padding: 3.5rem; display: flex; flex-direction: column; justify-content: space-between; }
+.login-lado h1 { color: #fff; font-size: 2.3rem; line-height: 1.2; margin-top: 3rem; }
+.login-lado p { color: #B9D3D6; font-size: 1.05rem; max-width: 420px; }
+.login-lado .pie { color: #7FA3A8; font-size: .85rem; }
+.login-form { display: grid; place-items: center; padding: 2rem; }
+.login-caja { width: 100%; max-width: 400px; }
+.ayuda { color: var(--texto-suave); font-size: .85rem; }
+
+/* Confirmacion */
+.confirmacion { max-width: 620px; margin: 0 auto; text-align: center; }
+.check-grande { width: 74px; height: 74px; border-radius: 50%; background: #DDF5EE; color: #12735C; display: grid; place-items: center; font-size: 2.4rem; margin: 0 auto 1rem; font-weight: 700; }
+.codigo { font-size: 2rem; font-weight: 700; letter-spacing: .08em; color: var(--primario); background: var(--tarjeta); border-radius: 8px; padding: .6rem 1.2rem; display: inline-block; margin: .6rem 0 1.2rem; }
+.detalle { text-align: left; display: grid; grid-template-columns: 140px 1fr; gap: .55rem 1rem; margin: 1rem 0 1.4rem; }
+.detalle dt { color: var(--texto-suave); }
+.detalle dd { margin: 0; font-weight: 700; }
+
+.proxima { display: flex; gap: 1.4rem; align-items: center; }
+.fecha-caja { background: var(--primario); color: #fff; border-radius: 10px; text-align: center; padding: .8rem 1.1rem; min-width: 92px; }
+.fecha-caja .dia { font-size: 2rem; font-weight: 700; line-height: 1; }
+.fecha-caja .mes { text-transform: uppercase; font-size: .85rem; letter-spacing: .08em; }
+.acciones { display: flex; gap: .5rem; align-items: center; }
+.candado { color: var(--texto-suave); font-size: .82rem; font-style: italic; }
+.filtros { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+.filtros label { margin: 0 0 .35rem; }
+.filtros > div { min-width: 170px; }
+
+@media (max-width: 860px) {
+  .grid-3, .grid-2, .grid-4, .pantalla-login { grid-template-columns: 1fr; }
+  .barra-in { flex-wrap: wrap; gap: .8rem; }
+  .menu { order: 3; width: 100%; overflow-x: auto; }
+  .login-lado { padding: 2rem; }
+  .login-lado h1 { margin-top: 1rem; }
+}

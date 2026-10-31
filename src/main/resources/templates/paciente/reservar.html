@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reservar cita')}">
+    <meta charset="UTF-8">
+    <title>Reservar cita · Clínica Santa Elena</title>
+    <link rel="stylesheet" href="../../static/css/app.css">
+</head>
+<body>
+<!-- P04 - Reservar cita (RF02, RF03, RF04, RF07) -->
+<header th:replace="~{fragments/layout :: barra('reservar')}" class="barra">
+    <div class="barra-in">
+        <a class="marca" href="#"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+        <nav class="menu"><a href="inicio.html">Inicio</a><a href="reservar.html" class="activo">Reservar cita</a><a href="mis-citas.html">Mis citas</a></nav>
+        <div class="usuario"><span>María Torres Salas</span><span class="avatar"></span><button class="btn-salir">Salir</button></div>
+    </div>
+</header>
+<main class="contenido">
+    <h1>Reservar una cita</h1>
+    <p class="sub">Completa los pasos. Solo verás los horarios libres.</p>
+
+    <div class="pasos">
+        <div class="paso" th:classappend="${paso > 1} ? 'hecho' : 'actual'">✓ 1. Especialidad</div>
+        <div class="paso hecho" th:classappend="${paso > 2} ? 'hecho' : (${paso == 2} ? 'actual' : '')">✓ 2. Médico</div>
+        <div class="paso actual" th:classappend="${paso > 3} ? 'hecho' : (${paso == 3} ? 'actual' : '')">3. Fecha</div>
+        <div class="paso" th:classappend="${paso == 4} ? 'actual'">4. Hora y confirmar</div>
+    </div>
+
+    <div class="alerta alerta-error" th:if="${error}" th:text="${error}">Ese horario acaba de ser reservado.</div>
+
+    <div class="grid-3">
+        <!-- Pasos 1 y 2: cada cambio recarga la pagina (GET) -->
+        <form class="tarjeta" th:action="@{/paciente/reservar}" method="get">
+            <label for="idEspecialidad">Especialidad</label>
+            <select id="idEspecialidad" name="idEspecialidad" data-autosubmit>
+                <option value="">Elige una especialidad</option>
+                <option th:each="e : ${especialidades}" th:value="${e.id}" th:text="${e.nombre}"
+                        th:selected="${e.id == reserva.idEspecialidad}" selected>Cardiología</option>
+            </select>
+
+            <label th:if="${!medicos.isEmpty()}">Médico</label>
+            <label th:each="m : ${medicos}" class="opcion-medico elegido"
+                   th:classappend="${m.id == reserva.idMedico} ? 'elegido'">
+                <input type="radio" name="idMedico" th:value="${m.id}" th:checked="${m.id == reserva.idMedico}" data-autosubmit>
+                <strong th:text="${m.nombreCompleto}">Dr(a). Luis Ramos Paredes</strong>
+                <span th:text="|CMP ${m.cmp} · Consultorio ${m.codigoConsultorio}|">CMP 045821 · Consultorio C-101</span>
+            </label>
+            <label th:remove="all" class="opcion-medico"><strong>Dr(a). Ana Quispe Rojas</strong><span>CMP 051233 · Consultorio C-101</span></label>
+            <noscript><button class="btn btn-secundario btn-chico">Continuar</button></noscript>
+        </form>
+
+        <!-- Paso 3: calendario de los proximos 21 dias -->
+        <section class="tarjeta">
+            <div class="cal-titulo" th:text="${#strings.capitalize(#temporals.format(calendario[0].fecha, 'MMMM yyyy'))}">Noviembre 2026</div>
+            <div class="cal">
+                <div class="dow">L</div><div class="dow">M</div><div class="dow">M</div><div class="dow">J</div>
+                <div class="dow">V</div><div class="dow">S</div><div class="dow">D</div>
+                <th:block th:with="desfase=${calendario[0].fecha.dayOfWeek.value - 1}">
+                    <span class="dia" th:if="${desfase > 0}" th:each="i : ${#numbers.sequence(1, desfase)}"></span>
+                </th:block>
+                <th:block th:each="d : ${calendario}">
+                    <a th:if="${d.atiende and reserva.idMedico != null}"
+                       th:href="@{/paciente/reservar(idEspecialidad=${reserva.idEspecialidad},idMedico=${reserva.idMedico},fecha=${d.fecha})}"
+                       th:classappend="${d.fecha == reserva.fecha} ? 'elegido'"
+                       th:text="${d.fecha.dayOfMonth}">2</a>
+                    <span class="dia" th:unless="${d.atiende and reserva.idMedico != null}" th:text="${d.fecha.dayOfMonth}">1</span>
+                </th:block>
+                <th:block th:remove="all">
+                <a href="#">3</a><span class="dia">4</span><a href="#" class="elegido">5</a><span class="dia">6</span><span class="dia">7</span><span class="dia">8</span>
+                <a href="#">9</a><a href="#">10</a><span class="dia">11</span><a href="#">12</a><span class="dia">13</span><span class="dia">14</span><span class="dia">15</span>
+                <a href="#">16</a><a href="#">17</a><span class="dia">18</span><a href="#">19</a><span class="dia">20</span>
+                </th:block>
+            </div>
+            <p class="nota">Días resaltados = el médico atiende.</p>
+        </section>
+
+        <!-- Paso 4: bloques libres y confirmacion (POST con token CSRF automatico) -->
+        <form class="tarjeta" th:action="@{/paciente/reservar}" th:object="${reserva}" method="post">
+            <input type="hidden" th:field="*{idEspecialidad}">
+            <input type="hidden" th:field="*{idMedico}">
+            <input type="hidden" th:field="*{fecha}">
+            <h2 th:if="${reserva.fecha != null}" th:text="|Horarios del ${#temporals.format(reserva.fecha, 'EEEE dd/MM')}|">Horarios del jueves 05/11</h2>
+            <div class="bloques" th:if="${!bloques.isEmpty()}">
+                <label th:each="b : ${bloques}" class="bloque" th:classappend="${!b.libre} ? 'ocupado'">
+                    <input type="radio" name="hora" th:value="${#temporals.format(b.hora, 'HH:mm')}"
+                           th:disabled="${!b.libre}"
+                           th:checked="${reserva.hora != null and b.hora == reserva.hora}">
+                    <span th:text="${#temporals.format(b.hora, 'HH:mm')}">08:00</span>
+                </label>
+                <th:block th:remove="all">
+                <label class="bloque ocupado"><input type="radio" disabled><span>08:20</span></label>
+                <label class="bloque"><input type="radio" name="h"><span>08:40</span></label>
+                <label class="bloque ocupado"><input type="radio" disabled><span>09:00</span></label>
+                <label class="bloque"><input type="radio" name="h" checked><span>09:20</span></label>
+                <label class="bloque"><input type="radio" name="h"><span>09:40</span></label>
+                <label class="bloque"><input type="radio" name="h"><span>10:00</span></label>
+                <label class="bloque ocupado"><input type="radio" disabled><span>10:20</span></label>
+                <label class="bloque"><input type="radio" name="h"><span>10:40</span></label>
+                <label class="bloque"><input type="radio" name="h"><span>11:00</span></label>
+                <label class="bloque ocupado"><input type="radio" disabled><span>11:20</span></label>
+                <label class="bloque"><input type="radio" name="h"><span>11:40</span></label>
+                </th:block>
+            </div>
+            <p class="nota" th:if="${!bloques.isEmpty()}">Tachado = ocupado.</p>
+            <div class="campo-error" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}"></div>
+            <p class="alerta alerta-info" th:if="${bloques.isEmpty()}"
+               th:text="${reserva.idMedico == null} ? 'Elige una especialidad y un médico.' : (${reserva.fecha == null} ? 'Elige un día resaltado del calendario.' : 'No hay horarios para ese día.')">Elige un día.</p>
+
+            <label for="motivo">Motivo de consulta (opcional)</label>
+            <textarea id="motivo" th:field="*{motivo}" maxlength="255">Control de presión arterial</textarea>
+            <p></p>
+            <button type="submit" class="btn btn-primario btn-bloque" th:disabled="${bloques.isEmpty()}">Confirmar cita</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

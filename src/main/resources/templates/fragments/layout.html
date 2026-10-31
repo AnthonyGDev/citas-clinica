@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- Fragmentos reutilizables: cabecera HTML y barra de navegacion por rol (una vista por rol, UX) -->
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' · Clínica Santa Elena'">Clínica Santa Elena</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+<header th:fragment="barra(activo)" class="barra">
+    <div class="barra-in">
+        <a class="marca" th:href="@{/}"><span class="marca-icono">+</span>Clínica Santa Elena</a>
+
+        <nav class="menu" sec:authorize="hasRole('PACIENTE')">
+            <a th:href="@{/paciente/inicio}" th:classappend="${activo == 'inicio'} ? 'activo'">Inicio</a>
+            <a th:href="@{/paciente/reservar}" th:classappend="${activo == 'reservar'} ? 'activo'">Reservar cita</a>
+            <a th:href="@{/paciente/mis-citas}" th:classappend="${activo == 'mis-citas'} ? 'activo'">Mis citas</a>
+        </nav>
+        <nav class="menu" sec:authorize="hasRole('MEDICO')">
+            <a th:href="@{/medico/agenda}" class="activo">Agenda del día</a>
+        </nav>
+        <nav class="menu" sec:authorize="hasRole('ADMINISTRADOR')">
+            <a th:href="@{/admin/reportes}" class="activo">Reportes</a>
+        </nav>
+
+        <div class="usuario">
+            <span sec:authentication="principal.nombreVisible">Usuario</span>
+            <span class="avatar"></span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn-salir">Salir</button>
+            </form>
+        </div>
+    </div>
+</header>
+</body>
+</html>
