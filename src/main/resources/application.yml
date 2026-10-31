@@ -1,0 +1,66 @@
+# Sistema de Citas - Clinica Santa Elena
+spring:
+  application:
+    name: citas-clinica
+  profiles:
+    active: dev
+  thymeleaf:
+    cache: false
+  messages:
+    encoding: UTF-8
+  web:
+    locale: es_PE
+    locale-resolver: fixed
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 30m          # RNF03: sesion de 30 minutos
+      cookie:
+        http-only: true
+        same-site: lax
+  error:
+    include-stacktrace: never   # nunca mostrar trazas al usuario
+    include-message: never
+
+logging:
+  file:
+    path: logs
+
+---
+# Perfil de desarrollo: H2 en memoria (no requiere instalar MySQL)
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:bd_citas_clinica;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  sql:
+    init:
+      mode: always
+      platform: h2
+      encoding: UTF-8
+
+---
+# Perfil de produccion: MySQL 8 con usuario de minimo privilegio (sin DELETE ni DROP)
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/bd_citas_clinica?useSSL=true&serverTimezone=America/Lima
+    username: ${DB_USER:app_citas}
+    password: ${DB_PASSWORD}       # se lee de variable de entorno, nunca del repositorio
+  sql:
+    init:
+      mode: never
+  thymeleaf:
+    cache: true
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
